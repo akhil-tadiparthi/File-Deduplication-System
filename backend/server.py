@@ -19,7 +19,7 @@ app.config['MYSQL_USER'] = os.getenv('MYSQL_USER', 'root')
 app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD', 'Deeptanshu1!!')
 app.config['MYSQL_DB'] = os.getenv('MYSQL_DB', 'DSC')
 
-minio_host = os.getenv('MINIO_HOST', '192.168.1.10:9000')
+minio_host = os.getenv('MINIO_HOST', 'localhost:9000')
 minio_access_key = os.getenv('MINIO_ACCESS_KEY', 'U2YahjD8umhyfWkGTvqE')
 minio_secret_key = os.getenv('MINIO_SECRET_KEY', 'Pi0XpMIhITArbnnTftGqxZczH5k6uNDV20n1DVRe')
 minio_bucket = os.getenv('MINIO_BUCKET', 'files')
@@ -50,7 +50,7 @@ def registerFunc():
         password = data.get('password')
 
         with mysql.cursor() as cursor:
-            cursor.execute("INSERT INTO userInfo (userName, name, email, password) VALUES (%s, %s, %s, %s)", (username, name, email, password))
+            cursor.execute("INSERT INTO userinfo (username, name, email, password) VALUES (%s, %s, %s, %s)", (username, name, email, password))
             mysql.commit()
         return jsonify({"status": "success", "message": "User registered successfully"}), 201
     except Exception as e:
@@ -65,7 +65,7 @@ def login():
             password = data.get('password')
 
             with mysql.cursor() as cursor:
-                cursor.execute("SELECT * FROM userInfo WHERE userName = (%s) AND password = (%s)", (username, password))
+                cursor.execute("SELECT * FROM userinfo WHERE username = (%s) AND password = (%s)", (username, password))
                 result = cursor.fetchone()
                 if result:
                     return jsonify({"status": "success", "username": f'{username}', "message": "User logged in successfully"}), 200
@@ -83,11 +83,11 @@ def viewFiles():
         print("Username:", username)
         files_data = []
         with mysql.cursor() as cursor:
-            cursor.execute("SELECT filename, checkSum, uploadtime FROM `DSC`.`fileInfo` WHERE username = %s", (username))
+            cursor.execute("SELECT filename, checksum, uploadtime FROM `DSC`.`fileinfo` WHERE username = %s", (username))
             results = cursor.fetchall()
 
             for row in results:
-                checkSum = row['checkSum']
+                checkSum = row['checksum']
                 fileName = row['filename']
                 uploadTime = row['uploadtime']
 
@@ -144,7 +144,7 @@ def fileUpload():
         if e.code == 'NoSuchKey':
             minio_client.put_object("files", fileHash, io.BytesIO(file_contents), len(file_contents), part_size=10*1024*1024)
             with mysql.cursor() as cursor:
-                cursor.execute("INSERT INTO fileInfo (username, checkSum, filename, uploadtime) VALUES (%s, %s, %s, %s)", (username, fileHash, fileName, uploadTime))
+                cursor.execute("INSERT INTO fileinfo (username, checksum, filename, uploadtime) VALUES (%s, %s, %s, %s)", (username, fileHash, fileName, uploadTime))
                 mysql.commit()
             return jsonify({'hash': fileHash, 'reason': 'File sent to minio'}), 200
         else:
