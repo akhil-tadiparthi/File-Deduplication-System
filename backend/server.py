@@ -19,7 +19,7 @@ app.config['MYSQL_USER'] = os.getenv('MYSQL_USER', 'root')
 app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD', 'Deeptanshu1!!')
 app.config['MYSQL_DB'] = os.getenv('MYSQL_DB', 'DSC')
 
-minio_host = os.getenv('MINIO_HOST', 'localhost:9000')
+minio_host = os.getenv('MINIO_HOST', '192.168.1.10:9000')
 minio_access_key = os.getenv('MINIO_ACCESS_KEY', 'U2YahjD8umhyfWkGTvqE')
 minio_secret_key = os.getenv('MINIO_SECRET_KEY', 'Pi0XpMIhITArbnnTftGqxZczH5k6uNDV20n1DVRe')
 minio_bucket = os.getenv('MINIO_BUCKET', 'files')
