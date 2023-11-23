@@ -47,7 +47,6 @@ const Dashboard = () => {
                     setUploadStatus('success');
                     console.log('Upload successful!');
                 } else {
-                    const errorText = await response.text();
                     alert('Upload failed: File already exists in the database!');
                     setUploadStatus('failed');
                 }

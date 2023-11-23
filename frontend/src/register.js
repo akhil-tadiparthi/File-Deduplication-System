@@ -36,7 +36,7 @@ const Register = (props) => {
             return
         }
 
-        if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+        if (!/^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
             setEmailError("Please enter a valid email")
             return
         }

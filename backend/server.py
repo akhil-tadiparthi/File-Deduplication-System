@@ -151,17 +151,9 @@ def fileUpload():
             print(str(e))
             return jsonify({"status": "error", "message": str(e)}), 500
 
-
-@app.route('/data')
-def get_time():
-    x = datetime.datetime.now()
-    return {
-        'Name': "geek",
-        "Age": "22",
-        "Date": x.strftime("%Y-%m-%d %H:%M:%S"),
-        "programming": "python"
-    }
-
+@app.route('/', methods=['GET'])
+def hello():
+    return '<h1>File DeDuplication Backend Service is running</h1><p>Use a valid endpoint</p>'
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
