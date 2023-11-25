@@ -38,7 +38,7 @@ const Dashboard = () => {
             formData.append('fileName', file.name);
 
             try {
-                const response = await fetch('http://localhost:5000/fileUpload', {
+                const response = await fetch('http://192.168.1.10:30010/fileUpload', {
                     method: 'POST',
                     body: formData,
                 });

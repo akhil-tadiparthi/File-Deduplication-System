@@ -1,0 +1,52 @@
+# Deploys a new Namespace for the mysql Pod
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dsc # Change this value if you want a different namespace name
+  labels:
+    name: dsc # Change this value to match metadata.name
+---
+
+# Deployment for service
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-api
+  namespace: dsc
+spec:
+  type: NodePort
+  selector:
+    app: flask-api
+  ports:
+    - port: 5000
+      # By default and for convenience, the `targetPort` is set to
+      # the same value as the `port` field.
+      targetPort: 5000
+      # Optional field
+      # By default and for convenience, the Kubernetes control plane
+      # will allocate a port from a range (default: 30000-32767)
+      nodePort: 30010
+---   
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-api
+  namespace: dsc
+spec:
+  selector:
+    matchLabels:
+      app: flask-api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: flask-api
+    spec:
+      containers:
+      - image: dsc-backend:latest
+        imagePullPolicy: Never
+        name: flask-api
+        ports:
+        - containerPort: 5000

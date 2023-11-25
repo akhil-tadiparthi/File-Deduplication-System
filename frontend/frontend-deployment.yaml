@@ -1,0 +1,52 @@
+# Deploys a new Namespace for the mysql Pod
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dsc # Change this value if you want a different namespace name
+  labels:
+    name: dsc # Change this value to match metadata.name
+---
+
+# Deployment for service
+apiVersion: v1
+kind: Service
+metadata:
+  name: reactapp
+  namespace: dsc
+spec:
+  type: NodePort
+  selector:
+    app: reactapp
+  ports:
+    - port: 3000
+      # By default and for convenience, the `targetPort` is set to
+      # the same value as the `port` field.
+      targetPort: 3000
+      # Optional field
+      # By default and for convenience, the Kubernetes control plane
+      # will allocate a port from a range (default: 30000-32767)
+      nodePort: 30011
+---   
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reactapp
+  namespace: dsc
+spec:
+  selector:
+    matchLabels:
+      app: reactapp
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: reactapp
+    spec:
+      containers:
+      - image: dsc-frontend:latest
+        imagePullPolicy: Never
+        name: reactapp
+        ports:
+        - containerPort: 3000

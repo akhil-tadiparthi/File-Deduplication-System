@@ -15,7 +15,7 @@ const ViewFiles = () => {
         }
 
         const fetchFiles = async () => {
-            const url = new URL('http://localhost:5000/viewFiles');
+            const url = new URL('http://192.168.1.10:30010/viewFiles');
             url.search = new URLSearchParams({username: user}).toString();
 
             try {

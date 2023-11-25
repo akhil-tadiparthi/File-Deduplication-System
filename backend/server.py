@@ -14,21 +14,22 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 CORS(app)
 
-app.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST', 'localhost')
+app.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST', '192.168.1.10')
+#app.config['MYSQL_PORT'] = os.getenv('MYSQL_PORT', 30009)
 app.config['MYSQL_USER'] = os.getenv('MYSQL_USER', 'root')
 app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD', 'Deeptanshu1!!')
-app.config['MYSQL_DB'] = os.getenv('MYSQL_DB', 'DSC')
+app.config['MYSQL_DB'] = os.getenv('MYSQL_DB', 'dsc')
 
-minio_host = os.getenv('MINIO_HOST', 'localhost:9000')
-minio_access_key = os.getenv('MINIO_ACCESS_KEY', 'U2YahjD8umhyfWkGTvqE')
-minio_secret_key = os.getenv('MINIO_SECRET_KEY', 'Pi0XpMIhITArbnnTftGqxZczH5k6uNDV20n1DVRe')
-minio_bucket = os.getenv('MINIO_BUCKET', 'files')
+minio_host = os.getenv('MINIO_HOST', '192.168.1.10:30007')
+minio_access_key = os.getenv('MINIO_ACCESS_KEY', 'TyP01W4zlgrUdXBZmf5l')
+minio_secret_key = os.getenv('MINIO_SECRET_KEY', 'I96pnNYgjpXjQdDmGbMArGZof5uRlCyje6eUhsye')
 
 mysql = pymysql.connect(
     host=app.config['MYSQL_HOST'],
     user=app.config['MYSQL_USER'],
     password=app.config['MYSQL_PASSWORD'],
     db=app.config['MYSQL_DB'],
+    port=30009,
     cursorclass=pymysql.cursors.DictCursor
 )
 app.mysql = mysql
@@ -83,7 +84,7 @@ def viewFiles():
         print("Username:", username)
         files_data = []
         with mysql.cursor() as cursor:
-            cursor.execute("SELECT filename, checksum, uploadtime FROM `DSC`.`fileinfo` WHERE username = %s", (username))
+            cursor.execute("SELECT filename, checksum, uploadtime FROM `dsc`.`fileinfo` WHERE username = %s", (username))
             results = cursor.fetchall()
 
             for row in results:
